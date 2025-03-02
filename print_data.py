@@ -22,6 +22,7 @@ async def print_data():
     load_dotenv()
 
     DATA_ORIGIN = os.getenv("DATA_ORIGIN")
+    OUTPUT_FORMAT = os.getenv("OUTPUT_FORMAT")
     query = None
 
     if DATA_ORIGIN == "wikipedia":
@@ -38,7 +39,10 @@ async def print_data():
         data = await reader.get_population_data(session)
     formatted_data = reader.format_population_data(data)
 
-    print(tabulate(formatted_data, headers=HEADERS, tablefmt="grid"))
+    if OUTPUT_FORMAT == "line-by-line":
+        [print(line) for row in formatted_data for line in row]
+    elif OUTPUT_FORMAT == "table":
+        print(tabulate(formatted_data, headers=HEADERS, tablefmt="grid"))
 
 
 if __name__ == "__main__":
